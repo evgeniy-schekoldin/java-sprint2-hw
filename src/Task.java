@@ -1,19 +1,18 @@
 public class Task {
 
-    private Integer id;
-    private String name;
-    private String details;
+    protected final long id;
+    protected String name;
+    protected String details;
     protected Status status;
-    public enum Status { NEW, DONE, IN_PROGRESS; }
 
-    public Task(Integer id, String name, String details, Status status) {
+    public Task(long id, String name, String details, Status status) {
         this.id = id;
         this.name = name;
         this.details = details;
         this.status = status;
     }
 
-    public Integer getId() { return id; }
+    public long getId() { return id; }
 
     public String getName() { return name; }
 
