@@ -61,7 +61,6 @@ public class Manager {
 
     public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
-
     }
 
     public void removeEpics() {
@@ -81,7 +80,7 @@ public class Manager {
     }
 
     public List<Subtask> getEpicSubtasks(Epic epic) {
-        ArrayList<Subtask> epicSubtasks = new ArrayList<>();
+        List<Subtask> epicSubtasks = new ArrayList<>();
         for (Subtask subtask : subtasks.values()) {
             if (subtask.getEpicId() == (epic.getId())) {
                 epicSubtasks.add(subtask);

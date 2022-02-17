@@ -1,1 +1,5 @@
-public enum Status { NEW, DONE, IN_PROGRESS; }
+public enum Status {
+    NEW,
+    DONE,
+    IN_PROGRESS
+}
