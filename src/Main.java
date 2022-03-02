@@ -1,7 +1,8 @@
 public class Main {
     public static void main(String[] args) {
         System.out.println("Пришло время практики!");
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
+        HistoryManager history = Managers.getDefaultHistory();
 
         Task task = new Task(manager.getNewId(), "test Task", "This is new test Task",
                 Status.NEW);
@@ -28,9 +29,26 @@ public class Main {
                 Status.NEW, epic2.getId());
         manager.updateSubtask(subtask4);
 
-        System.out.println(manager.getEpics());
-        System.out.println(manager.getTasks());
-        System.out.println(manager.getEpicSubtasks(epic));
-        System.out.println(manager.getSubtasks());
+        manager.getTask(task.getId());
+        manager.getTask(task2.getId());
+        manager.getEpic(epic.getId());
+        manager.getSubtask(subtask.getId());
+        manager.getSubtask(subtask2.getId());
+        manager.getTask(task.getId());
+        manager.getTask(task2.getId());
+        manager.getEpic(epic.getId());
+        manager.getSubtask(subtask.getId());
+        manager.getSubtask(subtask2.getId());
+        manager.getTask(task.getId());
+        manager.getTask(task2.getId());
+        manager.getEpic(epic.getId());
+
+        for (Task item : history.getHistory()) {
+            System.out.println("\"" + item.getName() + "\" - " + item.getStatus());
+        }
+
+
+
+
     }
 }
