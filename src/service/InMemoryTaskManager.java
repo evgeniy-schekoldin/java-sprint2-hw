@@ -12,19 +12,9 @@ import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private Integer taskId;
     private Map<Long, Task> tasks = new HashMap<>();
     private Map<Long, Epic> epics = new HashMap<>();
     private Map<Long, Subtask> subtasks = new HashMap<>();
-
-    public InMemoryTaskManager() {
-        taskId = 0;
-    }
-
-    @Override
-    public Integer getNewId() {
-        return taskId++;
-    }
 
     @Override
     public List<Task> getTasks() {

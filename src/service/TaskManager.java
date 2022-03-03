@@ -9,8 +9,6 @@ import java.util.List;
 
 public interface TaskManager {
 
-    Integer getNewId();
-
     List<Task> getTasks();
 
     void removeTasks();
