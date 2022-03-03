@@ -1,3 +1,5 @@
+package model;
+
 public class Epic extends Task {
 
     public Epic(long id, String name, String details, Status status) {

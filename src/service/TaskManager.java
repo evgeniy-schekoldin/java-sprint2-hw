@@ -1,3 +1,10 @@
+package service;
+
+import model.Epic;
+import model.Status;
+import model.Subtask;
+import model.Task;
+
 import java.util.List;
 
 public interface TaskManager {
@@ -35,7 +42,5 @@ public interface TaskManager {
     void deleteEpic(Long id);
 
     List<Subtask> getEpicSubtasks(Epic epic);
-
-    Status getEpicStatus(List<Subtask> epicSubtasks);
 
 }

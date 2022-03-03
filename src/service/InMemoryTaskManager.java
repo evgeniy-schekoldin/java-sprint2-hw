@@ -1,3 +1,10 @@
+package service;
+
+import model.Epic;
+import model.Status;
+import model.Subtask;
+import model.Task;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +117,6 @@ public class InMemoryTaskManager implements TaskManager {
         return epicSubtasks;
     }
 
-    @Override
     public Status getEpicStatus(List<Subtask> epicSubtasks) {
         if (epicSubtasks.size() == 0) {
             return Status.NEW;

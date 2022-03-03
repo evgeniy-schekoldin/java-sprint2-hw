@@ -1,6 +1,8 @@
+package model;
+
 public class Task {
 
-    protected final long id;
+    protected final Long id;
     protected String name;
     protected String details;
     protected Status status;
