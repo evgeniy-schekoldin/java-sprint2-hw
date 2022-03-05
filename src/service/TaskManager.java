@@ -1,7 +1,6 @@
 package service;
 
 import model.Epic;
-import model.Status;
 import model.Subtask;
 import model.Task;
 
@@ -11,7 +10,7 @@ public interface TaskManager {
 
     List<Task> getTasks();
 
-    void removeTasks();
+    void deleteAllTasks();
 
     Task getTask(Long id);
 
@@ -21,7 +20,7 @@ public interface TaskManager {
 
     List<Subtask> getSubtasks();
 
-    void removeSubtasks();
+    void deleteAllSubtasks();
 
     Subtask getSubtask(Long id);
 
@@ -31,7 +30,7 @@ public interface TaskManager {
 
     List<Epic> getEpics();
 
-    void removeEpics();
+    void deleteAllEpics();
 
     Epic getEpic(Long id);
 

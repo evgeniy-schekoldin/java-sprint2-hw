@@ -22,7 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeTasks() {
+    public void deleteAllTasks() {
         tasks.clear();
     }
 
@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeSubtasks() {
+    public void deleteAllSubtasks() {
         subtasks.clear();
     }
 
@@ -76,7 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void removeEpics() {
+    public void deleteAllEpics() {
         epics.clear();
     }
 
@@ -107,7 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epicSubtasks;
     }
 
-    public Status getEpicStatus(List<Subtask> epicSubtasks) {
+    private Status getEpicStatus(List<Subtask> epicSubtasks) {
         if (epicSubtasks.size() == 0) {
             return Status.NEW;
         }
