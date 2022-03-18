@@ -9,31 +9,31 @@ import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private static final int HISTORY_SIZE = 20;
+    private static final int HISTORY_SIZE = 10;
     private LinkedHistoryList history = new LinkedHistoryList();
-    private Map<Long, Node> nodeMap = new HashMap<>();
+    private Map<Long, Node> nodes = new HashMap<>();
 
     public void addTask(Task task) {
         if (history.getTasks().contains(task)) {
-            history.removeNode(nodeMap.get(task.getId()));
-            nodeMap.remove(task.getId());
+            history.removeNode(nodes.get(task.getId()));
+            nodes.remove(task.getId());
         }
 
-        nodeMap.put(task.getId(), history.linkLast(task));
+        nodes.put(task.getId(), history.linkLast(task));
 
         if (history.size() > HISTORY_SIZE) {
             Task data = (Task) history.getFirst();
             history.removeHead();
-            nodeMap.remove(data.getId());
+            nodes.remove(data.getId());
         }
 
     }
 
     public void removeTask(Long id) {
-        if (nodeMap.containsKey(id)) {
-            history.removeNode(nodeMap.get(id));
+        if (nodes.containsKey(id)) {
+            history.removeNode(nodes.get(id));
         }
-     }
+    }
 
     public List<Task> getHistory() {
         return history.getTasks();
@@ -60,7 +60,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         public List<T> getTasks() {
             Node<T> node = tail;
             List<T> result = new ArrayList<>();
-            for (int i = 0; i < size ; i++) {
+            for (int i = 0; i < size; i++) {
                 result.add(node.data);
                 node = node.prev;
             }
