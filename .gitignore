@@ -39,3 +39,5 @@ hs_err_pid*
 
 # IntelliJ
 /out/
+.DS_Store
+/src/.idea/workspace.xml
