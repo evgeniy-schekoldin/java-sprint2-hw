@@ -15,6 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Long, Task> tasks = new HashMap<>();
     private Map<Long, Epic> epics = new HashMap<>();
     private Map<Long, Subtask> subtasks = new HashMap<>();
+    private final HistoryManager history = Managers.getDefaultHistory();
 
     @Override
     public List<Task> getTasks() {
@@ -28,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTask(Long id) {
-        Managers.getDefaultHistory().addTask(tasks.get(id));
+        history.addTask((tasks.get(id)));
         return tasks.get(id);
     }
 
@@ -40,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTask(Long id) {
         tasks.remove(id);
-        Managers.getDefaultHistory().removeTask(id);
+        history.removeTask(id);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtask(Long id) {
-        Managers.getDefaultHistory().addTask(subtasks.get(id));
+        history.addTask(subtasks.get(id));
         return subtasks.get(id);
     }
 
@@ -69,7 +70,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtask(Long id) {
         subtasks.remove(id);
-        Managers.getDefaultHistory().removeTask(id);
+        history.removeTask(id);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpic(Long id) {
-        Managers.getDefaultHistory().addTask(epics.get(id));
+        history.addTask(epics.get(id));
         return epics.get(id);
     }
 
@@ -96,7 +97,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpic(Long id) {
         epics.remove(id);
-        Managers.getDefaultHistory().removeTask(id);
+        history.removeTask(id);
         List<Subtask> subtaskList = getSubtasks();
         for (Subtask subtask : subtaskList) {
             if (subtask.getEpicId() == id) {
