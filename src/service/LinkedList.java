@@ -5,9 +5,6 @@ import model.Node;
 import java.util.ArrayList;
 import java.util.List;
 
-/* Если назвать этот класс также, как "нормальный" LinkedList, не будет ли потом путаницы? Может быть поэтому
-* в ТЗ было указано размещать его не в отдельном файле, а внутри класса InMemoryHistoryManager? */
-
 public class LinkedList<T> {
     private Node<T> head;
     private Node<T> tail;
