@@ -8,13 +8,13 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager  {
 
-    private static List<Long> historyIds;
+    private Map<Long, TaskType> typeMap = new HashMap<>();
     private String path;
 
     public FileBackedTasksManager(String path) {
@@ -26,35 +26,44 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
         try {
             String db[] = Files.readString(Path.of(path)).split("\\n\\n");
-            String tasks[] = db[0].split("\n");
-
-            if (db.length > 1) {
-                String history = db[1];
-                historyIds = historyFromString(history);
-            }
+            String tasks[] = db[0].split("\\n");
 
             for (String task : tasks) {
                 fromString(task);
             }
 
+            if (db.length > 1) {
+                historyFromString(db[1]);
+            }
+
         } catch (IOException e) {
-            System.out.println("Произошла ошибка при попытке чтения данных из файла");
+            System.out.println("Произошла ошибка при чтении данных из файла");
         } catch (Exception e) {
-            System.out.println("Что-то пошло не так");
+            System.out.println("Ошибка при загрузке данных из файла");
         }
 
     }
 
-    private List<Long> historyFromString(String value) {
+    private void historyFromString(String value) {
 
+        System.out.println(value);
         String[] lines = value.split(",");
-        List<Long> historyId = new ArrayList<>();
+        Long id;
 
         for (String line : lines ) {
-            historyId.add(Long.parseLong(line));
+            id = Long.parseLong(line);
+            switch (typeMap.get(id)) {
+                case TASK:
+                    getTask(id);
+                    break;
+                case EPIC:
+                    getEpic(id);
+                    break;
+                case SUBTASK:
+                    getSubtask(id);
+                    break;
+            }
         }
-
-        return historyId;
     }
 
     private void save() {
@@ -80,24 +89,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             case TASK:
                 Task task = new Task(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]));
                 updateTask(task);
-                if (historyIds.contains(task.getId())) {
-                    getTask(task.getId());
-                }
+                typeMap.put(task.getId(), TaskType.TASK);
                 return task;
             case EPIC:
                 Epic epic = new Epic(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]));
                 updateEpic(epic);
-                if (historyIds.contains(epic.getId())) {
-                    getEpic(epic.getId());
-                }
+                typeMap.put(epic.getId(), TaskType.EPIC);
                 return epic;
             case SUBTASK:
                 Subtask subtask = new Subtask(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]),
                         Long.parseLong(split[5]));
                 updateSubtask(subtask);
-                if (historyIds.contains(subtask.getId())) {
-                    getSubtask(subtask.getId());
-                }
+                typeMap.put(subtask.getId(), TaskType.SUBTASK);
                 return subtask;
             default:
                 return null;
