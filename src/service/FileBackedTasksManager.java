@@ -29,7 +29,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             String tasks[] = db[0].split("\\n");
 
             for (String task : tasks) {
-                fromString(task);
+                taskFromString(task);
             }
 
             if (db.length > 1) {
@@ -46,21 +46,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     private void historyFromString(String value) {
 
-        System.out.println(value);
-        String[] lines = value.split(",");
-        Long id;
+        String[] split = value.split(",");
 
-        for (String line : lines ) {
-            id = Long.parseLong(line);
-            switch (typeMap.get(id)) {
+        for (String id : split) {
+             switch (typeMap.get(Long.parseLong(id))) {
                 case TASK:
-                    getTask(id);
+                    getTask(Long.parseLong(id));
                     break;
                 case EPIC:
-                    getEpic(id);
+                    getEpic(Long.parseLong(id));
                     break;
                 case SUBTASK:
-                    getSubtask(id);
+                    getSubtask(Long.parseLong(id));
                     break;
             }
         }
@@ -83,7 +80,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private Task fromString(String value) {
+    private Task taskFromString(String value) {
         String[] split = value.split(",");
         switch (TaskType.valueOf(split[1])) {
             case TASK:

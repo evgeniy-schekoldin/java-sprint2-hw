@@ -4,4 +4,4 @@
 2,SUBTASK,Subtask-2,NEW,подзадача для Epic-1,0
 3,SUBTASK,Subtask-3,NEW,подзадача для Epic-1,0
 
-0,1,
+1,0,
