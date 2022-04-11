@@ -24,12 +24,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return  (this.getClass().toString().substring(6)) + "{" +
-                "taskId=" + id +
-                ", taskName='" + name + '\'' +
-                ", taskDetails.length()='" + details.length() + '\'' +
-                ", taskStatus=" + status +
-                '}';
+        return (String.format("%s,%s,%s,%s,%s,", id, TaskType.TASK, name, status, details));
     }
 
 }

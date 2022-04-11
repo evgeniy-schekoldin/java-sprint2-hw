@@ -1,9 +1,10 @@
 package service;
 
 public class IdGenerator {
-    private static int id = 0;
+    private static Long id = 0L;
 
-    public static int generate() {
+    public static Long generate() {
         return id++;
     }
+
 }

@@ -3,7 +3,7 @@ package service;
 public class Managers {
 
     private static HistoryManager historyManager = new InMemoryHistoryManager();
-    private static TaskManager taskManager = new InMemoryTaskManager();
+    private static TaskManager taskManager = new FileBackedTasksManager("db.txt");
 
     public static TaskManager getDefault() {
         return taskManager;

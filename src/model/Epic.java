@@ -10,4 +10,9 @@ public class Epic extends Task {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return (String.format("%s,%s,%s,%s,%s,", id, TaskType.EPIC, name, status, details));
+    }
+
 }
