@@ -3,7 +3,6 @@ package service;
 import model.Node;
 import model.Task;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +40,13 @@ public class InMemoryHistoryManager implements HistoryManager {
         return history.getTasks();
     }
 
-    @Override
-    public String toString() {
+    public String getIds() {
         List<Task> history = getHistory();
         StringBuilder sb = new StringBuilder();
         for (Task task : history) {
             sb.append(task.getId() + ",");
         }
+
         return sb.toString();
     }
 }

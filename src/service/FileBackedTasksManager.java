@@ -14,8 +14,19 @@ import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager  {
 
-    private Map<Long, TaskType> typeMap = new HashMap<>();
-    private String path;
+    private final Map<Long, TaskType> typeMap = new HashMap<>();
+    private final String path;
+    private static final String LINE_DELIMITER = "\n";
+    private static final String SECTION_DELIMITER = "\\n\\n";
+    private static final int TYPE_COLUMN_INDEX = 0;
+    private static final int SECTION_TASKS = 0;
+    private static final int SECTION_HISTORY = 1;
+    private static final int TYPE_COLUMN_TYPE = 1;
+    private static final int TYPE_COLUMN_NAME = 2;
+    private static final int TYPE_COLUMN_STATUS = 3;
+    private static final int TYPE_COLUMN_DETAILS = 4;
+    private static final int TYPE_COLUMN_EPICID = 5;
+    private final HistoryManager history = Managers.getDefaultHistory();
 
     public FileBackedTasksManager(String path) {
         this.path = path;
@@ -25,15 +36,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private void loadFromFile(String path) {
 
         try {
-            String db[] = Files.readString(Path.of(path)).split("\\n\\n");
-            String tasks[] = db[0].split("\\n");
+            String db[] = Files.readString(Path.of(path)).split(SECTION_DELIMITER);
+            String tasks[] = db[SECTION_TASKS].split(LINE_DELIMITER);
 
             for (String task : tasks) {
                 taskFromString(task);
             }
 
             if (db.length > 1) {
-                historyFromString(db[1]);
+                historyFromString(db[SECTION_HISTORY]);
             }
 
         } catch (IOException e) {
@@ -45,7 +56,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     private void historyFromString(String value) {
-
         String[] split = value.split(",");
 
         for (String id : split) {
@@ -74,7 +84,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                 fw.write(task + "\n");
             }
             fw.write("\n");
-            fw.write(Managers.getDefaultHistory().toString());
+            fw.write(history.getIds());
         } catch (IOException e) {
             System.out.println("Ошибка при сохранение данных в файл");
         }
@@ -82,20 +92,24 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     private Task taskFromString(String value) {
         String[] split = value.split(",");
-        switch (TaskType.valueOf(split[1])) {
+
+        switch (TaskType.valueOf(split[TYPE_COLUMN_TYPE])) {
             case TASK:
-                Task task = new Task(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]));
+                Task task = new Task(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
+                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]));
                 updateTask(task);
                 typeMap.put(task.getId(), TaskType.TASK);
                 return task;
             case EPIC:
-                Epic epic = new Epic(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]));
+                Epic epic = new Epic(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
+                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]));
                 updateEpic(epic);
                 typeMap.put(epic.getId(), TaskType.EPIC);
                 return epic;
             case SUBTASK:
-                Subtask subtask = new Subtask(Long.parseLong(split[0]), split[2], split[4], Status.valueOf(split[3]),
-                        Long.parseLong(split[5]));
+                Subtask subtask = new Subtask(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
+                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]),
+                        Long.parseLong(split[TYPE_COLUMN_EPICID]));
                 updateSubtask(subtask);
                 typeMap.put(subtask.getId(), TaskType.SUBTASK);
                 return subtask;
