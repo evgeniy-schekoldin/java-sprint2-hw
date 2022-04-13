@@ -29,8 +29,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private final HistoryManager history = Managers.getDefaultHistory();
     private final Map<Long, TaskType> typeMap = new HashMap<>();
     private final String path;
-
-
+    
     public FileBackedTasksManager(String path) {
         this.path = path;
         loadFromFile(path);
