@@ -14,10 +14,9 @@ import java.util.Map;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager  {
 
-    private final Map<Long, TaskType> typeMap = new HashMap<>();
-    private final String path;
     private static final String LINE_DELIMITER = "\n";
-    private static final String SECTION_DELIMITER = "\\n\\n";
+    private static final String SECTION_DELIMITER = "\n\n";
+    private static final String VALUE_DELIMITER = ",";
     private static final int TYPE_COLUMN_INDEX = 0;
     private static final int SECTION_TASKS = 0;
     private static final int SECTION_HISTORY = 1;
@@ -26,7 +25,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private static final int TYPE_COLUMN_STATUS = 3;
     private static final int TYPE_COLUMN_DETAILS = 4;
     private static final int TYPE_COLUMN_EPICID = 5;
+
     private final HistoryManager history = Managers.getDefaultHistory();
+    private final Map<Long, TaskType> typeMap = new HashMap<>();
+    private final String path;
+
 
     public FileBackedTasksManager(String path) {
         this.path = path;
@@ -34,7 +37,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     private void loadFromFile(String path) {
-
         try {
             String db[] = Files.readString(Path.of(path)).split(SECTION_DELIMITER);
             String tasks[] = db[SECTION_TASKS].split(LINE_DELIMITER);
@@ -46,7 +48,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             if (db.length > 1) {
                 historyFromString(db[SECTION_HISTORY]);
             }
-
         } catch (IOException e) {
             System.out.println("Произошла ошибка при чтении данных из файла");
         } catch (Exception e) {
@@ -55,10 +56,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     }
 
-    private void historyFromString(String value) {
-        String[] split = value.split(",");
+    private void historyFromString(String historyString) {
+        String[] idValues = historyString.split(VALUE_DELIMITER);
 
-        for (String id : split) {
+        for (String id : idValues) {
              switch (typeMap.get(Long.parseLong(id))) {
                 case TASK:
                     getTask(Long.parseLong(id));
@@ -90,26 +91,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private Task taskFromString(String value) {
-        String[] split = value.split(",");
+    private Task taskFromString(String taskString) {
+        String[] taskValues = taskString.split(VALUE_DELIMITER);
 
-        switch (TaskType.valueOf(split[TYPE_COLUMN_TYPE])) {
+        switch (TaskType.valueOf(taskValues[TYPE_COLUMN_TYPE])) {
             case TASK:
-                Task task = new Task(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
-                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]));
+                Task task = new Task(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]), taskValues[TYPE_COLUMN_NAME],
+                        taskValues[TYPE_COLUMN_DETAILS], Status.valueOf(taskValues[TYPE_COLUMN_STATUS]));
                 updateTask(task);
                 typeMap.put(task.getId(), TaskType.TASK);
                 return task;
             case EPIC:
-                Epic epic = new Epic(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
-                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]));
+                Epic epic = new Epic(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]), taskValues[TYPE_COLUMN_NAME],
+                        taskValues[TYPE_COLUMN_DETAILS], Status.valueOf(taskValues[TYPE_COLUMN_STATUS]));
                 updateEpic(epic);
                 typeMap.put(epic.getId(), TaskType.EPIC);
                 return epic;
             case SUBTASK:
-                Subtask subtask = new Subtask(Long.parseLong(split[TYPE_COLUMN_INDEX]), split[TYPE_COLUMN_NAME],
-                        split[TYPE_COLUMN_DETAILS], Status.valueOf(split[TYPE_COLUMN_STATUS]),
-                        Long.parseLong(split[TYPE_COLUMN_EPICID]));
+                Subtask subtask = new Subtask(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]), taskValues[TYPE_COLUMN_NAME],
+                        taskValues[TYPE_COLUMN_DETAILS], Status.valueOf(taskValues[TYPE_COLUMN_STATUS]),
+                        Long.parseLong(taskValues[TYPE_COLUMN_EPICID]));
                 updateSubtask(subtask);
                 typeMap.put(subtask.getId(), TaskType.SUBTASK);
                 return subtask;
