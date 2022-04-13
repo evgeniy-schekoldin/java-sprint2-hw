@@ -56,10 +56,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     }
 
-    private void historyFromString(String historyString) {
-        String[] idValues = historyString.split(VALUE_DELIMITER);
+    private void historyFromString(String historyCsv) {
+        String[] ids = historyCsv.split(VALUE_DELIMITER);
 
-        for (String id : idValues) {
+        for (String id : ids) {
              switch (typeMap.get(Long.parseLong(id))) {
                 case TASK:
                     getTask(Long.parseLong(id));
@@ -91,8 +91,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
     }
 
-    private Task taskFromString(String taskString) {
-        String[] taskValues = taskString.split(VALUE_DELIMITER);
+    private Task taskFromString(String taskCsv) {
+        String[] taskValues = taskCsv.split(VALUE_DELIMITER);
 
         switch (TaskType.valueOf(taskValues[TYPE_COLUMN_TYPE])) {
             case TASK:
