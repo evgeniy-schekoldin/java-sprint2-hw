@@ -36,6 +36,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
+    public void clear() {
+        nodes.clear();
+        history.clear();
+    }
+
     public List<Task> getHistory() {
         return history.getTasks();
     }

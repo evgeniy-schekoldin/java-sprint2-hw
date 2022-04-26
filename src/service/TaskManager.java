@@ -4,7 +4,11 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -38,6 +42,8 @@ public interface TaskManager {
 
     void deleteEpic(Long id);
 
-    List<Subtask> getEpicSubtasks(Epic epic);
+    List<Task> getSortedTasks();
+
+    void clearSortedTasks();
 
 }

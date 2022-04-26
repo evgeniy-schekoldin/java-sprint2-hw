@@ -65,4 +65,17 @@ public class LinkedList<T> {
     public T getFirst() {
         return head.getData();
     }
+
+    public void clear() {
+        for (Node<T> node = head; node != null; ) {
+            Node<T> next = node.getNext();
+            node.setData(null);
+            node.setNext(null);
+            node.setPrev(null);
+            node = next;
+        }
+        head = tail = null;
+        size = 0;
+    }
+
 }

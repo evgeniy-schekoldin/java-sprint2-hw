@@ -1,7 +1,1 @@
-0,EPIC,Epic-1,NEW,описания для Epic-1,
-4,EPIC,Epic-2,NEW,Описание для Epic-2,
-1,SUBTASK,Subtask-1,NEW,подзадача для Epic-1,0
-2,SUBTASK,Subtask-2,NEW,подзадача для Epic-1,0
-3,SUBTASK,Subtask-3,NEW,подзадача для Epic-1,0
 
-1,0,4,
