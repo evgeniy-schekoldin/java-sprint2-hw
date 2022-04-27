@@ -212,9 +212,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected List<Task> getAllTasks() {
         List allTasks = new ArrayList<>();
-        allTasks.addAll(getTasks());
-        allTasks.addAll(getSubtasks());
         allTasks.addAll(getEpics());
+        allTasks.addAll(getSubtasks());
+        allTasks.addAll(getTasks());
         return allTasks;
     }
 
