@@ -1,10 +1,6 @@
 package service;
 
 import model.*;
-import service.HistoryManager;
-import service.InMemoryTaskManager;
-import service.Managers;
-import service.TaskManager;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
 
     private static final String LINE_DELIMITER = "\n";
     private static final String SECTION_DELIMITER = "\n\n";
@@ -32,9 +28,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private static final int TYPE_COLUMN_EPICID = 7;
 
     private final HistoryManager history = Managers.getDefaultHistory();
-    private final Map<Long, TaskType> typeMap = new HashMap<>();
+    private final Map<Long, TaskType> taskTypes = new HashMap<>();
     private final String path;
-    
+
     public FileBackedTasksManager(String path) {
         this.path = path;
         loadFromFile(path);
@@ -51,6 +47,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         Task task = super.getTask(id);
         save();
         return task;
+    }
+
+    @Override
+    public void addTask(Task task) {
+        super.addTask(task);
+        save();
     }
 
     @Override
@@ -79,6 +81,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
+    public void addSubtask(Subtask subtask) {
+        super.addSubtask(subtask);
+        save();
+    }
+
+    @Override
     public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
         save();
@@ -104,6 +112,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     @Override
+    public void addEpic(Epic epic) {
+        super.addEpic(epic);
+        save();
+    }
+
+    @Override
     public void updateEpic(Epic epic) {
         super.updateEpic(epic);
         save();
@@ -122,14 +136,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             for (String task : tasks) {
                 taskFromString(task);
             }
+
+            if (taskTypes.size() > 0) {
+                IdGenerator.setNextId(Collections.max(taskTypes.keySet()) + 1);
+            }
+
             if (db.length > 1) {
                 historyFromString(db[SECTION_HISTORY]);
             }
         } catch (IOException e) {
             System.out.println("Произошла ошибка при чтении данных из файла");
-        } catch (Exception e) {
-            System.out.println("Ошибка при загрузке данных из файла");
-            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Ошибка при загрузке данных истории из файла: " + e.getMessage());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Ошибка при загрузке данных о задачах из файла: " + e.getMessage());
         }
 
     }
@@ -138,7 +158,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         String[] ids = historyCsv.split(VALUE_DELIMITER);
 
         for (String id : ids) {
-            switch (typeMap.get(Long.parseLong(id))) {
+            switch (taskTypes.get(Long.parseLong(id))) {
                 case TASK:
                     getTask(Long.parseLong(id));
                     break;
@@ -155,14 +175,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private void save() {
         List<Task> tasks = new ArrayList<>(getAllTasks());
 
-        try(Writer fw = new FileWriter(path)) {
+        try (Writer fw = new FileWriter(path)) {
             for (Task task : tasks) {
                 fw.write(task + "\n");
             }
             fw.write("\n");
             fw.write(history.getIds());
         } catch (IOException e) {
-            System.out.println("Ошибка при сохранение данных в файл");
+            throw new ManagerSaveException("Ошибка при сохранении данных в файл");
         }
     }
 
@@ -180,19 +200,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         switch (TaskType.valueOf(taskValues[TYPE_COLUMN_TYPE])) {
             case TASK:
                 Task task = new Task(
-                        Long.parseLong(taskValues[TYPE_COLUMN_INDEX]),
                         taskValues[TYPE_COLUMN_NAME],
                         taskValues[TYPE_COLUMN_DETAILS],
                         Status.valueOf(taskValues[TYPE_COLUMN_STATUS]),
                         Duration.parse(taskValues[TYPE_COLUMN_DURATION]),
                         parseDateTime(taskValues[TYPE_COLUMN_STARTTIME])
                 );
+                task.setId(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]));
                 updateTask(task);
-                typeMap.put(task.getId(), TaskType.TASK);
+                taskTypes.put(task.getId(), TaskType.TASK);
                 return task;
             case SUBTASK:
                 Subtask subtask = new Subtask(
-                        Long.parseLong(taskValues[TYPE_COLUMN_INDEX]),
                         taskValues[TYPE_COLUMN_NAME],
                         taskValues[TYPE_COLUMN_DETAILS],
                         Status.valueOf(taskValues[TYPE_COLUMN_STATUS]),
@@ -200,20 +219,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                         parseDateTime(taskValues[TYPE_COLUMN_STARTTIME]),
                         Long.parseLong(taskValues[TYPE_COLUMN_EPICID])
                 );
+                subtask.setId(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]));
                 updateSubtask(subtask);
-                typeMap.put(subtask.getId(), TaskType.SUBTASK);
+                taskTypes.put(subtask.getId(), TaskType.SUBTASK);
                 return subtask;
             case EPIC:
                 Epic epic = new Epic(
-                        Long.parseLong(taskValues[TYPE_COLUMN_INDEX]),
                         taskValues[TYPE_COLUMN_NAME],
                         taskValues[TYPE_COLUMN_DETAILS],
-                        Status.valueOf(taskValues[TYPE_COLUMN_STATUS]),
                         null,
                         null
                 );
+                epic.setId(Long.parseLong(taskValues[TYPE_COLUMN_INDEX]));
                 updateEpic(epic);
-                typeMap.put(epic.getId(), TaskType.EPIC);
+                taskTypes.put(epic.getId(), TaskType.EPIC);
                 return epic;
             default:
                 return null;

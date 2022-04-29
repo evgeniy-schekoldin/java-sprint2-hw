@@ -1,19 +1,15 @@
 package model;
 
-import service.*;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.TreeSet;
 
 public class Epic extends Task {
 
-    public Epic(long id, String name, String details, Status status, Duration duration, LocalDateTime startTime) {
-        super(id, name, details, status, duration, startTime);
+    public Epic(String name, String details, Duration duration, LocalDateTime startTime) {
+        super(name, details, null, duration, startTime);
     }
 
-    public void setTaskStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -7,4 +7,8 @@ public class IdGenerator {
         return id++;
     }
 
+    public static void setNextId(long newId) {
+        id = newId;
+    }
+
 }

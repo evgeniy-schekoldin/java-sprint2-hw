@@ -2,14 +2,11 @@ package model;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Objects;
 
 public class Subtask extends Task {
     private final long epicId;
 
     public Subtask(
-            long id,
             String name,
             String details,
             Status status,
@@ -17,7 +14,7 @@ public class Subtask extends Task {
             LocalDateTime startTime,
             long epicId
     ) {
-        super(id, name, details, status, duration, startTime);
+        super(name, details, status, duration, startTime);
         this.epicId = epicId;
     }
 

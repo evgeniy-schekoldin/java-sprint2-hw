@@ -3,12 +3,7 @@ package service;
 import model.Epic;
 import model.Subtask;
 import model.Task;
-
-import java.time.Duration;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -17,6 +12,8 @@ public interface TaskManager {
     void deleteAllTasks();
 
     Task getTask(Long id);
+
+    void addTask(Task task);
 
     void updateTask(Task task);
 
@@ -28,6 +25,8 @@ public interface TaskManager {
 
     Subtask getSubtask(Long id);
 
+    void addSubtask(Subtask subtask);
+
     void updateSubtask(Subtask subtask);
 
     void deleteSubtask(Long id);
@@ -37,6 +36,8 @@ public interface TaskManager {
     void deleteAllEpics();
 
     Epic getEpic(Long id);
+
+    void addEpic(Epic epic);
 
     void updateEpic(Epic epic);
 

@@ -15,6 +15,11 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Map<Long, Node<Task>> nodes = new HashMap<>();
 
     public void addTask(Task task) {
+
+        if (task == null) {
+            return;
+        }
+
         if (history.getTasks().contains(task)) {
             history.removeNode(nodes.get(task.getId()));
             nodes.remove(task.getId());

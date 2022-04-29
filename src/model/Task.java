@@ -1,23 +1,19 @@
 package model;
 
-import service.Managers;
-import service.TaskManager;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
 
-    protected final Long id;
+    protected Long id;
     protected String name;
     protected String details;
     protected Status status;
     protected Duration duration;
     protected LocalDateTime startTime;
 
-    public Task(long id, String name, String details, Status status, Duration duration, LocalDateTime startTime) {
-        this.id = id;
+    public Task(String name, String details, Status status, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.details = details;
         this.status = status;
@@ -26,6 +22,8 @@ public class Task {
     }
 
     public long getId() { return id; }
+
+    public void setId(long id) {this.id = id; }
 
     public String getName() { return name; }
 

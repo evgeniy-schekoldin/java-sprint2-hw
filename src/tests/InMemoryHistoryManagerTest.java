@@ -14,13 +14,13 @@ class InMemoryHistoryManagerTest {
 
     HistoryManager history = Managers.getDefaultHistory();
     TaskManager manager = Managers.getDefault();
-    Epic epic0 = new Epic(0L, "NEW_0L", "NEW", Status.NEW, null,null);
-    Epic epic1 = new Epic(1L, "NEW_1L", "NEW", Status.NEW, null,null);
+    Epic epic0 = new Epic( "NEW_0L", "NEW",  null,null);
+    Epic epic1 = new Epic( "NEW_1L", "NEW",  null,null);
 
     @BeforeEach
     void beforeEach() {
-        manager.updateEpic(epic0);
-        manager.updateEpic(epic1);
+        manager.addEpic(epic0);
+        manager.addEpic(epic1);
     }
 
     @AfterEach
@@ -32,20 +32,22 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldReturn0ForEmptyHistory() {
-        Assertions.assertEquals(history.getHistory().size(), 0);
+        Assertions.assertEquals(history.getHistory().size(), 0, "Размер истории не равен 0");
     }
 
     @Test
     void shouldReturn1ForEqualItems() {
-        manager.getEpic(0L);
-        manager.getEpic(0L);
-        Assertions.assertEquals(history.getHistory().size(), 1);
+        manager.getEpic(epic0.getId());
+        manager.getEpic(epic0.getId());
+        Assertions.assertEquals(history.getHistory().size(), 1, "Размер истории не равен 1");
     }
 
     @Test
     void shouldReturnSeparatedHistoryIdValues() {
-        manager.getEpic(0L);
-        manager.getEpic(1L);
-        Assertions.assertEquals(history.getIds(), "1,0,");
+        manager.getEpic(epic0.getId());
+        manager.getEpic(epic1.getId());
+        String ids = epic1.getId() + "," + epic0.getId() + ",";
+        Assertions.assertEquals(history.getIds(), ids, "История в виде строки возвращена не корректно");
     }
+
 }
