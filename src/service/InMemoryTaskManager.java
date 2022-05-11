@@ -23,7 +23,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllTasks() {
+    public void deleteAllTasks()  {
         List<Task> tasksList = new ArrayList<>(getTasks());
         for (Task task : tasksList) {
             deleteTask(task.getId());
@@ -80,8 +80,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllSubtasks() {
-        List<Subtask> subtasksList = new ArrayList<>(getSubtasks());
-        for (Subtask subtask : subtasksList) {
+        List<Task> subtasksList = new ArrayList<>(getSubtasks());
+        for (Task subtask : subtasksList) {
             deleteSubtask(subtask.getId());
         }
     }
@@ -156,8 +156,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpics() {
-        List<Epic> epicsList = new ArrayList<>(getEpics());
-        for (Epic epic : epicsList) {
+        List<Task> epicsList = new ArrayList<>(getEpics());
+        for (Task epic : epicsList) {
             deleteEpic(epic.getId());
         }
     }
@@ -172,6 +172,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void addEpic(Epic epic) {
         epic.setId(IdGenerator.generate());
         epic.setStatus(Status.NEW);
+        epic.setDuration(getEpicDuration(epic));
+        epic.setStartTime(getEpicStartTime(epic));
         sortedTasks.add(epic);
         epics.put(epic.getId(), epic);
     }

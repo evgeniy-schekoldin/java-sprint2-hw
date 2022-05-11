@@ -47,7 +47,7 @@ class InMemoryHistoryManagerTest {
         manager.getEpic(epic0.getId());
         manager.getEpic(epic1.getId());
         String ids = epic1.getId() + "," + epic0.getId() + ",";
-        Assertions.assertEquals(history.getIds(), ids, "История в виде строки возвращена не корректно");
+        Assertions.assertEquals(ids, history.getIds(),"История в виде строки возвращена не корректно");
     }
 
 }

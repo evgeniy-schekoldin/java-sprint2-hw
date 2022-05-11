@@ -129,7 +129,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    private void loadFromFile(String path) {
+    void loadFromFile(String path) {
         try {
             String db[] = Files.readString(Path.of(path)).split(SECTION_DELIMITER);
             String tasks[] = db[SECTION_TASKS].split(LINE_DELIMITER);
@@ -172,7 +172,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
     }
 
-    private void save() {
+    void save() {
         List<Task> tasks = new ArrayList<>(getAllTasks());
 
         try (Writer fw = new FileWriter(path)) {

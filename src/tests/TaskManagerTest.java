@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.TaskManager;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     Task task1 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now());
 
     @BeforeEach
-    void beforeEach() {
+    void beforeEach() throws IOException {
     }
 
     @AfterEach

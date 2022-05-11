@@ -1,5 +1,7 @@
 package service;
 
+import java.io.IOException;
+
 public class Managers {
 
     private static HistoryManager historyManager;
@@ -7,7 +9,7 @@ public class Managers {
 
     public static TaskManager getDefault() {
         if (taskManager == null) {
-            taskManager = new FileBackedTasksManager("db.txt");
+            taskManager = new HTTPTaskManager("http://localhost:8078");
         }
         return taskManager;
     }

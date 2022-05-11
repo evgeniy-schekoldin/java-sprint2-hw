@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Task {
 
-    protected Long id;
+    protected long id;
     protected String name;
     protected String details;
     protected Status status;

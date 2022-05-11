@@ -7,6 +7,8 @@ import model.Subtask;
 import org.junit.jupiter.api.*;
 import service.Managers;
 import service.TaskManager;
+
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -14,6 +16,9 @@ class EpicTest {
 
     TaskManager manager = Managers.getDefault();
     Epic epic = new Epic("NEW_0L", "NEW", null,null);
+
+    EpicTest() throws IOException, InterruptedException {
+    }
 
     @BeforeEach
     void beforeEach() {
