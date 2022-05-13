@@ -151,7 +151,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 });
         String expectedMessage = "Указанный в подзадаче Epic не существует";
         String message = ex.getMessage();
-        Assertions.assertEquals(expectedMessage, message, "Текст исключения отличается от ожидаемого");
+        assertEquals(expectedMessage, message, "Текст исключения отличается от ожидаемого");
         manager.deleteEpic(epic0.getId());
         manager.deleteSubtask(subtask0.getId());
     }
@@ -164,12 +164,21 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.addSubtask(subtask0);
         subtask1.setId(subtask0.getId());
         manager.updateSubtask(subtask1);
-        assertNotNull(manager.getSubtask(subtask0.getId()), "Метод вернул значение null");
-        Assertions.assertEquals(subtask1.getId(), subtask0.getId(), "Id задачи не совпадает");
+        Subtask subtask = manager.getSubtask(subtask0.getId());
+        assertNotNull((subtask), "Метод вернул значение null");
+        long expectedId = subtask1.getId();
+        long id = subtask0.getId();
+        Assertions.assertEquals(expectedId, id, "Id задачи не совпадает");
         subtask1 = manager.getSubtask(subtask1.getId());
-        assertEquals(subtask1.getStatus(), Status.DONE, "Статус задачи не обновился");
-        assertEquals(subtask1.getName(), "UPDATED", "Имя задачи не обновилось");
-        assertEquals(subtask1.getDetails(), "UPDATED", "Описание задачи не обновилось");
+        Status expectedStatus = Status.DONE;
+        Status status = subtask1.getStatus();
+        assertEquals(expectedStatus, status, "Статус задачи не обновился");
+        String name = "UPDATED";
+        String expectedName = subtask1.getName();
+        assertEquals(expectedName, name, "Имя задачи не обновилось");
+        String expectedDetails = "UPDATED";
+        String details = subtask1.getDetails();
+        assertEquals(expectedDetails, details, "Описание задачи не обновилось");
         assertDoesNotThrow(
                 () -> {
                     manager.updateSubtask(null);
