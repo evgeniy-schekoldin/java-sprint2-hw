@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
 
-    final TaskManager manager;
+    protected final TaskManager manager;
 
     public TaskManagerTest(T manager) {
         this.manager = manager;
