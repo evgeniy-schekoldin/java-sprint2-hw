@@ -1,4 +1,6 @@
-import service.*;
+import main.java.service.HTTPTaskServer;
+import main.java.service.KVServer;
+
 import java.io.IOException;
 
 public class Main {
