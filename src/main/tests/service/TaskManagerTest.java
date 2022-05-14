@@ -24,11 +24,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         this.manager = manager;
     }
 
-    Epic epic0 = new Epic("NEW", "NEW", null, null);
-    Epic epic1 = new Epic("NEW", "NEW", null, null);
-    Task task0 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now().plusMinutes(90));
-    Task task1 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now());
-
     @BeforeEach
     void beforeEach() {
 
@@ -43,6 +38,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testAddTaskTaskManager() {
+        Task task0 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now().plusMinutes(90));
         manager.addTask(task0);
         int expectedSize = 1;
         int size = manager.getTasks().size();
@@ -59,6 +55,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testGetTaskTaskManager() {
+        Task task0 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now().plusMinutes(90));
         manager.addTask(task0);
         Task task = manager.getTask(task0.getId());
         assertNotNull(task, "Задача не добавилась");
@@ -66,6 +63,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateTaskTaskManager() {
+        Task task1 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now());
         manager.addTask(task1);
         Task task2 = new Task("UPDATED", "UPDATED", Status.DONE, Duration.ofMinutes(0), LocalDateTime.now());
         task2.setId(task1.getId());
@@ -102,14 +100,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testDeleteTaskTaskManager() {
+        Task task0 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now().plusMinutes(90));
         manager.addTask(task0);
         manager.deleteTask(task0.getId());
         Task task = manager.getTask(task0.getId());
-        assertNull(task,"Метод вернул значение, отличное от null");
+        assertNull(task, "Метод вернул значение, отличное от null");
     }
 
     @Test
     void testAddSubtaskTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         Subtask subtask1 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(20), null, epic0.getId());
@@ -117,11 +117,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.addSubtask(subtask1);
         List<Subtask> expected = List.of(subtask0, subtask1);
         List<Subtask> actual = manager.getSubtasks();
-        assertTrue(expected.containsAll(actual),"Списки с объектами-задачами класса Subtask не равны");
+        assertTrue(expected.containsAll(actual), "Списки с объектами-задачами класса Subtask не равны");
     }
 
     @Test
     void testEmptySubtasksTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         Subtask subtask1 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(20), null, epic0.getId());
@@ -130,11 +131,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.deleteAllSubtasks();
         int expectedSize = 0;
         int size = manager.getSubtasks().size();
-        assertEquals(expectedSize, size,"Список объектов-задач класса Subtask должен быть пустой");
+        assertEquals(expectedSize, size, "Список объектов-задач класса Subtask должен быть пустой");
     }
 
     @Test
     void testAddCorrectAndIncorrectSubtaskTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         Subtask subtask1 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(20), null, epic0.getId());
@@ -158,6 +160,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateSubtaskTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         Subtask subtask1 = new Subtask("UPDATED", "UPDATED", Status.DONE, Duration.ofMinutes(20), null, epic0.getId());
@@ -187,16 +190,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testDeleteSubtaskTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         manager.addSubtask(subtask0);
         manager.deleteSubtask(subtask0.getId());
         Task task = manager.getSubtask(subtask0.getId());
         assertNull(task, "Метод вернул значение, отличное от null");
-     }
+    }
 
     @Test
     void testAddEpicTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         int expectedSize = 1;
         int size = manager.getEpics().size();
@@ -205,19 +210,21 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testDeleteEpicsTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         manager.addSubtask(subtask0);
         manager.deleteAllEpics();
         int expectedSize = 0;
         int size = manager.getEpics().size();
-        assertEquals(expectedSize, size,"Список объектов-задач класса Epic должен быть пустой");
+        assertEquals(expectedSize, size, "Список объектов-задач класса Epic должен быть пустой");
         size = manager.getSubtasks().size();
         assertEquals(expectedSize, size, "Список объектов-задач класса Subtask должен быть пустой");
     }
 
     @Test
     void testGetEpicTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Task task = manager.getEpic(epic0.getId());
         assertNotNull(task, "Метод вернул значение null");
@@ -225,8 +232,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testUpdateEpicTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
-        epic1 = new Epic("UPDATED", "UPDATED", Duration.ofMinutes(0), null);
+        Epic epic1 = new Epic("UPDATED", "UPDATED", Duration.ofMinutes(0), null);
         epic1.setId(epic0.getId());
         Status expectedStatus = Status.NEW;
         Status status = epic0.getStatus();
@@ -257,19 +265,22 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void testDeleteEpicTaskManager() {
+        Epic epic0 = new Epic("NEW", "NEW", null, null);
         manager.addEpic(epic0);
         Subtask subtask0 = new Subtask("NEW", "NEW", Status.NEW, Duration.ofMinutes(10), null, epic0.getId());
         manager.addSubtask(subtask0);
         manager.deleteEpic(epic0.getId());
         Epic epic = manager.getEpic(epic0.getId());
         Subtask subtask = manager.getSubtask(subtask0.getId());
-        assertNull(epic,"Метод вернул значение, отличное от null");
+        assertNull(epic, "Метод вернул значение, отличное от null");
         assertNull(subtask, "Метод вернул значение, отличное от null");
     }
 
     @Test
     void testSortedTasksTaskManager() {
         manager.clearSortedTasks();
+        Task task0 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now().plusMinutes(90));
+        Task task1 = new Task("NEW", "NEW", Status.NEW, Duration.ofMinutes(0), LocalDateTime.now());
         manager.addTask(task0);
         manager.addTask(task1);
         List<Task> expected = new ArrayList<>();

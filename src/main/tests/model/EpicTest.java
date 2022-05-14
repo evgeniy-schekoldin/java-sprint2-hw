@@ -15,23 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EpicTest {
 
-    TaskManager manager = Managers.getDefault();
-    Epic epic = new Epic("NEW_0L", "NEW", null,null);
-    Subtask subtaskNew = new Subtask( "SUBTASK_NAME_1", "DETAILS", Status.NEW,
-            Duration.ofMinutes(20), LocalDateTime.now(), epic.getId());
-
-    @BeforeEach
-    void beforeEach() {
-        manager.addEpic(epic);
-    }
+    private final TaskManager manager = Managers.getDefault();
 
     @AfterEach
     void afterEach() {
-        manager.deleteEpic(epic.getId());
+        manager.deleteAllEpics();
     }
 
     @Test
     void testEpicStatusWithoutSubtasks() {
+        Epic epic = new Epic("NEW_0L", "NEW", null,null);
+        manager.addEpic(epic);
         Status exceptedStatus = Status.NEW;
         Status status = epic.getStatus();
         assertEquals(exceptedStatus, status, "Статус задачи не равен NEW");
@@ -39,6 +33,8 @@ class EpicTest {
 
     @Test
     void testEpicStatusWithNewSubtasks() {
+        Epic epic = new Epic("NEW_0L", "NEW", null,null);
+        manager.addEpic(epic);
         Subtask subtask1 = new Subtask( "SUBTASK_NAME_1", "DETAILS", Status.NEW,
                 Duration.ofMinutes(20), LocalDateTime.now(), epic.getId());
         manager.addSubtask(subtask1);
@@ -52,6 +48,8 @@ class EpicTest {
 
     @Test
     void testEpicStatusWithDoneSubtasks() {
+        Epic epic = new Epic("NEW_0L", "NEW", null,null);
+        manager.addEpic(epic);
         Subtask subtask1 = new Subtask("SUBTASK_NAME_1", "DETAILS", Status.DONE,
                 Duration.ofMinutes(20), LocalDateTime.now(), epic.getId());
         manager.addSubtask(subtask1);
@@ -65,6 +63,8 @@ class EpicTest {
 
     @Test
     void testEpicStatusWithDoneAndNewSubtasks() {
+        Epic epic = new Epic("NEW_0L", "NEW", null,null);
+        manager.addEpic(epic);
         Subtask subtask1 = new Subtask("SUBTASK_NAME_1", "DETAILS", Status.NEW,
                 Duration.ofMinutes(20), LocalDateTime.now(), epic.getId());
         manager.addSubtask(subtask1);
@@ -78,6 +78,8 @@ class EpicTest {
 
     @Test
     void testEpicStatusWithInProgressSubtasks() {
+        Epic epic = new Epic("NEW_0L", "NEW", null,null);
+        manager.addEpic(epic);
         Subtask subtask1 = new Subtask("SUBTASK_NAME_1", "DETAILS", Status.IN_PROGRESS,
                 Duration.ofMinutes(20), LocalDateTime.now(), epic.getId());
         manager.addSubtask(subtask1);
